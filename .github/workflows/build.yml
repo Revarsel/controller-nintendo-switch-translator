@@ -1,0 +1,28 @@
+name: Build firmware
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: carlosperate/arm-none-eabi-gcc-action@v1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build
+        run: ./scripts/build.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SwitchTranslator-firmware
+          path: build/GP2040-CE_*_SwitchTranslator.uf2
